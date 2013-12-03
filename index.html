@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chart Demo</title>
+  <meta charset="UTF-8">
+  <style>
+  body {
+    margin: 0.5em;
+    padding: 0;
+  }
+  .chart {
+    width: calc(100% - 1em);
+  }
+  .chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+  </style>
+<head>
+<body>
+  <p><a href="http://bost.ocks.org/mike/bar/" target="_blank">Let's Make a Chart: Tutorial</a></p>
+  <p><a href="chart-2.html">Part 2 &gt;&gt;</a></p>
+
+  <div class="chart"></div>
+
+  <script src="http://d3js.org/d3.v3.js"></script>
+  <script>
+  // Raw data
+  var data = [4, 8, 15, 16, 23, 42];
+
+  // Data scaling
+  var p = d3.scale.linear()
+      .domain([0, d3.max(data)])
+      .range([0, 100]);
+
+  // Visualization
+  var chart = d3.select(".chart"),
+      bar = chart.selectAll("div"),
+      barUpdate = bar.data(data),
+      barEnter = barUpdate.enter().append("div");
+
+  barEnter.style("width", function(d) { return p(d) + "%"; })
+  barEnter.text(function(d) { return d; });
+  </script>
+</body>
+</html>
