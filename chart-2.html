@@ -25,7 +25,8 @@
   <p><a href="http://bost.ocks.org/mike/bar/" target="_blank">Let's Make a Chart: Tutorial</a></p>
   <p><a href="index.html">&lt;&lt; Part 1</a></p>
 
-  <svg class="chart" width="420" height="120">
+  <svg class="chart">
+    <!--
     <g transform="translate(0,0)">
       <rect width="40" height="19"></rect>
       <text x="37" y="9.5" dy=".35em">4</text>
@@ -50,11 +51,52 @@
       <rect width="420" height="19"></rect>
       <text x="417" y="9.5" dy=".35em">42</text>
     </g>
+    -->
   </svg>
 
   <script>
   // The Raw Data
-  var data = [4, 8, 15, 16, 23, 42];
+  var data = [4, 8, 15, 16, 23, 30, 25, 42];
+
+  // Chart settings
+  var chartWidth = 400,
+      chartHeight = 400,
+      barSpacing = 5,
+      barWidth = Math.round(chartWidth / data.length) - barSpacing;
+
+  // Scale the data
+  var scale = d3.scale.linear()
+      .domain([0, d3.max(data)])
+      .range([0, chartHeight])
+
+  // Select the overall chart DOM object
+  var chart = d3.select('svg')
+        .attr("height", chartHeight)
+        .attr("width", chartWidth),
+      bars = chart.selectAll('g')
+        .data(data)
+        .enter();
+      
+  // Add attributes
+  var group = bars.append('g')
+        .attr('transform', function(d, i) { 
+          var x = i * (barWidth + barSpacing),
+              y = chartHeight - scale(d)
+          return "translate(" + x + ", " + y + ")";
+        })
+
+  // Add the bar to the chart
+  group.append('rect')
+    .attr("width", barWidth)
+    .attr("height", function(d) { return scale(d); });
+
+  // Add the text to the bar
+  group.append('text')
+    .text(function(d) { return d; })
+    .attr("y", function(d) { return "1em"; })
+    .attr("x", function(d) { return Math.round(barWidth / 2); })
+    .attr("dx", function(d) { return ".5em"; })
+
   </script>
 </body>
 </html>
